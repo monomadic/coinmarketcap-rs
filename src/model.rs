@@ -12,8 +12,10 @@ fn deserialize_some<'de, T, D>(deserializer: D) -> Result<Option<T>, D::Error>
           T::Err: Display,
           D: Deserializer<'de>
 {
-    let s = Deserialize::deserialize(deserializer).map(Some).expect("deserialise from string");
-    Ok(Some(T::from_str(s.unwrap()).map_err(de::Error::custom)?))
+    match Deserialize::deserialize(deserializer) {
+        Ok(s) => Ok(Some(T::from_str(s).map_err(de::Error::custom)?)),
+        Err(e) => Ok(None)
+    }
 }
 
 fn from_str<'de, T, D>(deserializer: D) -> Result<T, D::Error>
