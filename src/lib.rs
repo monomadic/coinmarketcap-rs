@@ -14,9 +14,9 @@ pub use error::*;
 
 const API_URL: &str = "https://api.coinmarketcap.com/v1";
 
-pub fn all(limit: u32) -> Result<Vec<CoinCap>, CoinmarketcapError> {
+pub fn ticker(limit: u32, start: u32) -> Result<Vec<CoinCap>, CoinmarketcapError> {
     let client = reqwest::Client::new();
-    let request_url = &format!("{}/ticker?limit={}", API_URL, limit);
+    let request_url = &format!("{}/ticker?limit={}&start={}", API_URL, limit, start);
 
     let mut response = reqwest::get(request_url).expect("/v1/ticker to respond correctly");
     let body = response.text().expect("json response to have text");
